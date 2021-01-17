@@ -78,21 +78,9 @@ int main() {
                             sfRenderWindow_close(window);
                             break;
                         default:
-                            for(int i = 0; i < sizeof(keys)/sizeof(key); i++){
-                                if(event.key.code == keys[i].keyCode) {
-                                    keys[i].pressed = true;
-                                }
-                            }
                             break;
                     }
                     break;
-                    case sfEvtKeyReleased:
-                        for(int i = 0; i < sizeof(keys)/sizeof(key); i++){
-                            if(event.key.code == keys[i].keyCode) {
-                                keys[i].pressed = false;
-                            }
-                        }
-                        break;
                 default:
                     break;
             }
