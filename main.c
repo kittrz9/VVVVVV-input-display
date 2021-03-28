@@ -10,9 +10,6 @@ typedef struct {
     sfVector2f pos;
     sfKeyCode keyCode;
 } key;
-
-#define EXIT_FAILURE 1
-#define EXIT_SUCCESS 0
  
 int main() {
     sfVideoMode mode = {600, 400, 32};
@@ -20,41 +17,39 @@ int main() {
     sfRectangleShape* rect;
     sfEvent event;
     
-    key keys[8];
+    key keys[6];
     
     // Initializing every key to being not pressed
     for(int i = 0; i < sizeof(keys)/sizeof(keys[0]); i++) { keys[i].pressed = false; }
     // Hard coded values lmao
     // Size will probably also be hard coded to 50 as long as everything else it set to hard coded values
     keys[0].keyCode = sfKeyNumpad8; // Up
-    keys[0].pos.x = KEYSIZE;
+    keys[0].pos.x = KEYSIZE*4;
     keys[0].pos.y = 0;
     keys[1].keyCode = sfKeyNumpad4; // Left
-    keys[1].pos.x = 0;
+    keys[1].pos.x = KEYSIZE*3;
     keys[1].pos.y = KEYSIZE;
     keys[2].keyCode = sfKeyNumpad5; // Down
-    keys[2].pos.x = KEYSIZE;
+    keys[2].pos.x = KEYSIZE*4;
     keys[2].pos.y = KEYSIZE;
     keys[3].keyCode = sfKeyNumpad6; // Right
-    keys[3].pos.x = KEYSIZE*2;
+    keys[3].pos.x = KEYSIZE*5;
     keys[3].pos.y = KEYSIZE;
-    keys[4].keyCode = sfKeyZ;
-    keys[4].pos.x = KEYSIZE*4;
+    keys[4].keyCode = sfKeyX;
+    keys[4].pos.x = 0;
     keys[4].pos.y = KEYSIZE;
-    keys[5].keyCode = sfKeyX;
-    keys[5].pos.x = KEYSIZE*5;
+    keys[5].keyCode = sfKeyC;
+    keys[5].pos.x = KEYSIZE;
     keys[5].pos.y = KEYSIZE;
-    keys[6].keyCode = sfKeyC;
-    keys[6].pos.x = KEYSIZE*6;
-    keys[6].pos.y = KEYSIZE;
-    keys[7].keyCode = sfKeyNumpad9;
-    keys[7].pos.x = KEYSIZE*6;
-    keys[7].pos.y = 0;
 
     /* Create the main window */
     window = sfRenderWindow_create(mode, "SFML window", sfResize | sfClose, NULL);
     if (!window)
-        return EXIT_FAILURE;
+        return 1;
+    
+    // Framerate cap so that it doesnt use up all of a single thread on my garbage i3-3240 lmao
+    // This is still over my monitor's refresh rate so it doesnt really matter besides just not going at 2 billion fps
+    sfRenderWindow_setFramerateLimit(window, 200);
     
     rect = sfRectangleShape_create();
     sfVector2f size = {KEYSIZE, KEYSIZE};
@@ -111,5 +106,5 @@ int main() {
     sfRectangleShape_destroy(rect);
     sfRenderWindow_destroy(window);
 
-    return EXIT_SUCCESS;
+    return 0;
 }
