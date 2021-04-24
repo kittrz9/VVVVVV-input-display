@@ -2,45 +2,82 @@
 #include <stdbool.h> // boolean values
 #include <stdio.h> // printf
 
-#define KEYSIZE 75
-
 typedef struct {
-    const char* str;
     bool pressed;
-    sfVector2f pos;
+	// Drawn size
+	sfVector2f size;
+	// Texture coordinates
+    sfIntRect unpressedRect, pressedRect;
+	// Drawn position
+	sfVector2f pos;
+	
     sfKeyCode keyCode;
 } key;
+
+// Really bad hard coded values lmao
+key keys[] = {
+	{ // W
+		.size = {.x=128,.y=128},
+		.unpressedRect={.left=0,.top=0,.width=128,.height=128},
+		.pressedRect={.left=0,.top=128,.width=128,.height=128},
+		.pos={.x=128,.y=0},
+		.keyCode=sfKeyW,
+	},
+	{ // A
+		.size = {.x=128,.y=128},
+		.unpressedRect={.left=128,.top=0,.width=128,.height=128},
+		.pressedRect={.left=128,.top=128,.width=128,.height=128},
+		.pos={.x=0,.y=128},
+		.keyCode=sfKeyA,
+	},
+	{ // S
+		.size = {.x=128,.y=128},
+		.unpressedRect={.left=256,.top=0,.width=128,.height=128},
+		.pressedRect={.left=256,.top=128,.width=128,.height=128},
+		.pos={.x=128,.y=128},
+		.keyCode=sfKeyS,
+	},
+	{ // D
+		.size = {.x=128,.y=128},
+		.unpressedRect={.left=384,.top=0,.width=128,.height=128},
+		.pressedRect={.left=384,.top=128,.width=128,.height=128},
+		.pos={.x=256,.y=128},
+		.keyCode=sfKeyD,
+	},
+	{ // V
+		.size = {.x=128,.y=128},
+		.unpressedRect={.left=512,.top=0,.width=128,.height=128},
+		.pressedRect={.left=512,.top=128,.width=128,.height=128},
+		.pos={.x=0,.y=256},
+		.keyCode=sfKeyV,
+	},
+	{ // R
+		.size = {.x=128,.y=128},
+		.unpressedRect={.left=640,.top=0,.width=128,.height=128},
+		.pressedRect={.left=640,.top=128,.width=128,.height=128},
+		.pos={.x=128,.y=256},
+		.keyCode=sfKeyR,
+	},
+	{ // Enter
+		.size = {.x=128,.y=128},
+		.unpressedRect={.left=768,.top=0,.width=128,.height=128},
+		.pressedRect={.left=768,.top=128,.width=128,.height=128},
+		.pos={.x=256,.y=256},
+		.keyCode=sfKeyEnter
+	},
+};
  
 int main() {
     sfVideoMode mode = {600, 400, 32};
     sfRenderWindow* window;
     sfRectangleShape* rect;
     sfEvent event;
-    
-    key keys[6];
+	
+	sfTexture* keysTexture;
+	keysTexture = sfTexture_createFromFile("res/keys.png", NULL);
     
     // Initializing every key to being not pressed
     for(int i = 0; i < sizeof(keys)/sizeof(keys[0]); i++) { keys[i].pressed = false; }
-    // Hard coded values lmao
-    // Size will probably also be hard coded to 50 as long as everything else it set to hard coded values
-    keys[0].keyCode = sfKeyNumpad8; // Up
-    keys[0].pos.x = KEYSIZE*4;
-    keys[0].pos.y = 0;
-    keys[1].keyCode = sfKeyNumpad4; // Left
-    keys[1].pos.x = KEYSIZE*3;
-    keys[1].pos.y = KEYSIZE;
-    keys[2].keyCode = sfKeyNumpad5; // Down
-    keys[2].pos.x = KEYSIZE*4;
-    keys[2].pos.y = KEYSIZE;
-    keys[3].keyCode = sfKeyNumpad6; // Right
-    keys[3].pos.x = KEYSIZE*5;
-    keys[3].pos.y = KEYSIZE;
-    keys[4].keyCode = sfKeyX;
-    keys[4].pos.x = 0;
-    keys[4].pos.y = KEYSIZE;
-    keys[5].keyCode = sfKeyC;
-    keys[5].pos.x = KEYSIZE;
-    keys[5].pos.y = KEYSIZE;
 
     /* Create the main window */
     window = sfRenderWindow_create(mode, "SFML window", sfResize | sfClose, NULL);
@@ -52,8 +89,7 @@ int main() {
     sfRenderWindow_setFramerateLimit(window, 200);
     
     rect = sfRectangleShape_create();
-    sfVector2f size = {KEYSIZE, KEYSIZE};
-    sfRectangleShape_setSize(rect, size);
+	sfRectangleShape_setTexture(rect, keysTexture, 0);
  
     /* Start the game loop */
     while (sfRenderWindow_isOpen(window))
@@ -87,12 +123,17 @@ int main() {
         //sfRenderWindow_drawRectangleShape(window, rect, NULL);
         for(int i = 0; i < sizeof(keys)/sizeof(key); i++){
             sfRectangleShape_setPosition(rect, keys[i].pos);
+			sfRectangleShape_setSize(rect, keys[i].size);
             
+			sfIntRect textureRect;
+			
             if(sfKeyboard_isKeyPressed(keys[i].keyCode)){
-                sfRectangleShape_setFillColor(rect, sfColor_fromInteger(0x00659FFF));
+				textureRect = keys[i].pressedRect;
             } else {
-                sfRectangleShape_setFillColor(rect, sfColor_fromInteger(0x00A2FFFF));
+				textureRect = keys[i].unpressedRect;
             }
+            
+            sfRectangleShape_setTextureRect(rect, textureRect);
             
             sfRenderWindow_drawRectangleShape(window, rect, NULL);
         }
