@@ -3,15 +3,15 @@
 #include <stdio.h> // printf
 
 typedef struct {
-    bool pressed;
+	bool pressed;
 	// Drawn size
 	sfVector2f size;
 	// Texture coordinates
-    sfIntRect unpressedRect, pressedRect;
+	sfIntRect unpressedRect, pressedRect;
 	// Drawn position
 	sfVector2f pos;
 	
-    sfKeyCode keyCode;
+	sfKeyCode keyCode;
 } key;
 
 // Really bad hard coded values lmao
@@ -68,84 +68,84 @@ key keys[] = {
 };
  
 int main() {
-    sfVideoMode mode = {600, 400, 32};
-    sfRenderWindow* window;
-    sfRectangleShape* rect;
-    sfEvent event;
+	sfVideoMode mode = {600, 400, 32};
+	sfRenderWindow* window;
+	sfRectangleShape* rect;
+	sfEvent event;
 	
 	sfTexture* keysTexture;
 	keysTexture = sfTexture_createFromFile("res/keys.png", NULL);
-    
-    // Initializing every key to being not pressed
-    for(int i = 0; i < sizeof(keys)/sizeof(keys[0]); i++) { keys[i].pressed = false; }
+	
+	// Initializing every key to being not pressed
+	for(int i = 0; i < sizeof(keys)/sizeof(keys[0]); i++) { keys[i].pressed = false; }
 
-    /* Create the main window */
-    window = sfRenderWindow_create(mode, "SFML window", sfResize | sfClose, NULL);
-    if (!window)
-        return 1;
-    
-    // Framerate cap so that it doesnt use up all of a single thread on my garbage i3-3240 lmao
-    // This is still over my monitor's refresh rate so it doesnt really matter besides just not going at 2 billion fps
-    sfRenderWindow_setFramerateLimit(window, 200);
-    
-    rect = sfRectangleShape_create();
+	/* Create the main window */
+	window = sfRenderWindow_create(mode, "SFML window", sfResize | sfClose, NULL);
+	if (!window)
+		return 1;
+	
+	// Framerate cap so that it doesnt use up all of a single thread on my garbage i3-3240 lmao
+	// This is still over my monitor's refresh rate so it doesnt really matter besides just not going at 2 billion fps
+	sfRenderWindow_setFramerateLimit(window, 200);
+	
+	rect = sfRectangleShape_create();
 	sfRectangleShape_setTexture(rect, keysTexture, 0);
- 
-    /* Start the game loop */
-    while (sfRenderWindow_isOpen(window))
-    {
-        /* Process events */
-        while (sfRenderWindow_pollEvent(window, &event))
-        {
-            /* Close window : exit */
-            if (event.type == sfEvtClosed)
-                sfRenderWindow_close(window);
-            
-            switch(event.type){
-                case sfEvtKeyPressed:
-                    switch(event.key.code){
-                        case sfKeyQ:
-                        case sfKeyEscape:
-                            sfRenderWindow_close(window);
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        /* Clear the screen */
-        sfRenderWindow_clear(window, sfColor_fromRGB(32,32,32));
- 
-        //sfRenderWindow_drawRectangleShape(window, rect, NULL);
-        for(int i = 0; i < sizeof(keys)/sizeof(key); i++){
-            sfRectangleShape_setPosition(rect, keys[i].pos);
+	
+	/* Start the game loop */
+	while (sfRenderWindow_isOpen(window))
+	{
+	/* Process events */
+	while (sfRenderWindow_pollEvent(window, &event))
+		{
+		/* Close window : exit */
+		if (event.type == sfEvtClosed)
+			sfRenderWindow_close(window);
+		
+		switch(event.type){
+			case sfEvtKeyPressed:
+				switch(event.key.code){
+					case sfKeyQ:
+					case sfKeyEscape:
+						sfRenderWindow_close(window);
+						break;
+					default:
+						break;
+				}
+				break;
+			default:
+				break;
+		}
+	}
+	
+		/* Clear the screen */
+		sfRenderWindow_clear(window, sfColor_fromRGB(32,32,32));
+	
+		//sfRenderWindow_drawRectangleShape(window, rect, NULL);
+		for(int i = 0; i < sizeof(keys)/sizeof(key); i++){
+			sfRectangleShape_setPosition(rect, keys[i].pos);
 			sfRectangleShape_setSize(rect, keys[i].size);
-            
+			
 			sfIntRect textureRect;
 			
-            if(sfKeyboard_isKeyPressed(keys[i].keyCode)){
+			if(sfKeyboard_isKeyPressed(keys[i].keyCode)){
 				textureRect = keys[i].pressedRect;
-            } else {
+			} else {
 				textureRect = keys[i].unpressedRect;
-            }
-            
-            sfRectangleShape_setTextureRect(rect, textureRect);
-            
-            sfRenderWindow_drawRectangleShape(window, rect, NULL);
-        }
-        
- 
-        /* Update the window */
-        sfRenderWindow_display(window);
-    }
-
-    /* Cleanup resources */
-    sfRectangleShape_destroy(rect);
-    sfRenderWindow_destroy(window);
-
-    return 0;
+			}
+			
+			sfRectangleShape_setTextureRect(rect, textureRect);
+			
+			sfRenderWindow_drawRectangleShape(window, rect, NULL);
+		}
+		
+		
+		/* Update the window */
+		sfRenderWindow_display(window);
+	}
+	
+	/* Cleanup resources */
+	sfRectangleShape_destroy(rect);
+	sfRenderWindow_destroy(window);
+	
+	return 0;
 }
