@@ -94,28 +94,28 @@ int main() {
 	/* Start the game loop */
 	while (sfRenderWindow_isOpen(window))
 	{
-	/* Process events */
-	while (sfRenderWindow_pollEvent(window, &event))
-		{
-		/* Close window : exit */
-		if (event.type == sfEvtClosed)
-			sfRenderWindow_close(window);
-		
-		switch(event.type){
-			case sfEvtKeyPressed:
-				switch(event.key.code){
-					case sfKeyQ:
-					case sfKeyEscape:
-						sfRenderWindow_close(window);
-						break;
-					default:
-						break;
-				}
-				break;
-			default:
-				break;
+		/* Process events */
+		while (sfRenderWindow_pollEvent(window, &event))
+			{
+			/* Close window : exit */
+			if (event.type == sfEvtClosed)
+				sfRenderWindow_close(window);
+			
+			switch(event.type){
+				case sfEvtKeyPressed:
+					switch(event.key.code){
+						case sfKeyQ:
+						case sfKeyEscape:
+							sfRenderWindow_close(window);
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
 		}
-	}
 	
 		/* Clear the screen */
 		sfRenderWindow_clear(window, sfColor_fromRGB(32,32,32));
