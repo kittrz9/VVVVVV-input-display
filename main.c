@@ -3,14 +3,13 @@
 #include <stdio.h> // printf
 
 typedef struct {
-	bool pressed;
 	// Drawn size
 	sfVector2f size;
 	// Texture coordinates
 	sfIntRect unpressedRect, pressedRect;
 	// Drawn position
 	sfVector2f pos;
-	
+	// SFML key for when it's checked if it's pressed
 	sfKeyCode keyCode;
 } key;
 
@@ -76,9 +75,6 @@ int main() {
 	sfTexture* keysTexture;
 	keysTexture = sfTexture_createFromFile("res/keys.png", NULL);
 	
-	// Initializing every key to being not pressed
-	for(int i = 0; i < sizeof(keys)/sizeof(keys[0]); i++) { keys[i].pressed = false; }
-
 	/* Create the main window */
 	window = sfRenderWindow_create(mode, "SFML window", sfResize | sfClose, NULL);
 	if (!window)
@@ -116,17 +112,17 @@ int main() {
 					break;
 			}
 		}
-	
+		
 		/* Clear the screen */
 		sfRenderWindow_clear(window, sfColor_fromRGB(32,32,32));
-	
-		//sfRenderWindow_drawRectangleShape(window, rect, NULL);
+		
 		for(int i = 0; i < sizeof(keys)/sizeof(key); i++){
 			sfRectangleShape_setPosition(rect, keys[i].pos);
 			sfRectangleShape_setSize(rect, keys[i].size);
 			
 			sfIntRect textureRect;
 			
+			// checking if the key is pressed
 			if(sfKeyboard_isKeyPressed(keys[i].keyCode)){
 				textureRect = keys[i].pressedRect;
 			} else {
