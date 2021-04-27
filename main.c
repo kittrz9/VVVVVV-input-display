@@ -141,6 +141,7 @@ int main() {
 	
 	/* Cleanup resources */
 	sfRectangleShape_destroy(rect);
+	sfTexture_destroy(keysTexture);
 	sfRenderWindow_destroy(window);
 	
 	return 0;
